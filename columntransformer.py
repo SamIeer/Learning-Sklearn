@@ -7,8 +7,9 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, root_mean_squared_error
+from sklearn.model_selection import cross_val_score
 #1. Load the dataset
 housing = pd.read_csv("housing.csv")
 
@@ -66,6 +67,8 @@ lin_reg = LinearRegression()
 lin_reg.fit(housing_prepared, housing_labels)
 lin_preds = lin_reg.predict(housing_prepared)
 lin_rmse = root_mean_squared_error(housing_labels, lin_preds)
+tree_rmses = cross_val_score(lin_reg, housing_prepared,housing_labels, 
+                             scoring="neg_root_mean_squares_error",cv=10)
 print(f"The root mean square error is {lin_preds}")
 
 # Linear Regression Model
@@ -73,6 +76,8 @@ dec_reg = LinearRegression()
 dec_reg.fit(housing_prepared, housing_labels)
 dec_preds = dec_reg.predict(housing_prepared)
 dec_rmse = root_mean_squared_error(housing_labels, dec_preds)
+tree_rmses = cross_val_score(dec_reg, housing_prepared,housing_labels, 
+                             scoring="neg_root_mean_squares_error",cv=10)
 print(f"The root mean square error is {lin_preds}")
 
 #Random Forest Model 
@@ -80,4 +85,6 @@ random_forest_reg = RandomForestRegressor()
 random_forest_reg.fit(housing_prepared, housing_labels)
 random_forest_preds = random_forest_reg.predict(housing_prepared)
 random_forest_rmse = root_mean_squared_error(housing_labels,random_forest_preds)
+tree_rmses = cross_val_score(random_forest_reg, housing_prepared,housing_labels, 
+                             scoring="neg_root_mean_squares_error",cv=10)
 print(f"The root mean squared error for Random Forest is {random_forest_rmse}")
